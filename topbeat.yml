@@ -3,48 +3,47 @@
 ############################# Input ############################################
 input:
  # In seconds, defines how often to read server statistics
- period: {PERIOD}
+ period: {{PERIOD}}
 
  # Regular expression to match the processes that are monitored
  # By default, all the processes are monitored
- procs: ["{PROCS}"]
+ procs: ["{{PROCS}}"]
 
  stats:
   system: true
   proc: true
   filesystem: true
-  cpu_per_core: {CPU_PER_CORE}
+  cpu_per_core: {{CPU_PER_CORE}}
 
 ############################# Output ##########################################
 
 # Configure what outputs to use when sending the data collected by the beat.
-# You can enable one or multiple outputs by setting enabled option to true.
+# Multiple outputs may be used.
 output:
 
   ### Elasticsearch as output
-  elasticsearch:
+  #elasticsearch:
+    # Array of hosts to connect to.
+    # Scheme and port can be left out and will be set to the default (http and 9200)
+    # In case you specify and additional path, the scheme is required: http://localhost:9200/path
+    # IPv6 addresses should always be defined as: https://[2001:db8::1]:9200
+    #hosts: ["localhost:9200"]
 
-    # A list of Elasticsearch hosts. If the connection to the first host fails, it connects to the second one.
-    # A host can be defined as an IP:PORT or an URL with the format: scheme://IP:PORT/path. In case you specify and
-    # additional path, the scheme is required. The defaults are ( port is 9200, path is '/', scheme is http).
-    # In case of an IPv6 address, please use http://[2001:db8::1]:9200.
-    hosts: ["{HOST}:{PORT}"]
-
-    # Optional protocol and basic auth credentials. These are deprectad
+    # Optional protocol and basic auth credentials.
     #protocol: "https"
     #username: "admin"
     #password: "s3cr3t"
 
     # Number of workers per Elasticsearch host.
     #worker: 1
-    
-    # Optional index name. The default is "topbeat" and generates
-    # [topbeat-]YYYY.MM.DD keys.
-    index: "{INDEX}"
+
+    # Optional index name. The default is "packetbeat" and generates
+    # [packetbeat-]YYYY.MM.DD keys.
+    #index: "packetbeat"
 
     # Optional HTTP Path
     #path: "/elasticsearch"
-    
+
     # Proxy server url
     #proxy_url: http://proxy:3128
 
@@ -103,18 +102,85 @@ output:
       #max_version: 1.2
 
 
+  ### Logstash as output
+  logstash:
+    # The Logstash hosts
+    hosts: ["{{LOGSTASH_HOST}}:{{LOGSTASH_PORT}}"]
+
+    # Number of workers per Logstash host.
+    #worker: 1
+
+    # Set gzip compression level.
+    #compression_level: 3
+
+    # Optional load balance the events between the Logstash hosts
+    #loadbalance: true
+
+    # Optional index name. The default index name depends on the each beat.
+    # For Packetbeat, the default is set to packetbeat, for Topbeat
+    # top topbeat and for Filebeat to filebeat.
+    index: {{INDEX}}
+
+    # Optional TLS. By default is off.
+    #tls:
+      # List of root certificates for HTTPS server verifications
+      #certificate_authorities: ["/etc/pki/root/ca.pem"]
+
+      # Certificate for TLS client authentication
+      #certificate: "/etc/pki/client/cert.pem"
+
+      # Client Certificate Key
+      #certificate_key: "/etc/pki/client/cert.key"
+
+      # Controls whether the client verifies server certificates and host name.
+      # If insecure is set to true, all server host names and certificates will be
+      # accepted. In this mode TLS based connections are susceptible to
+      # man-in-the-middle attacks. Use only for testing.
+      #insecure: true
+
+      # Configure cipher suites to be used for TLS connections
+      #cipher_suites: []
+
+      # Configure curve types for ECDHE based cipher suites
+      #curve_types: []
+
+
+  ### File as output
+  #file:
+    # Path to the directory where to save the generated files. The option is mandatory.
+    #path: "/tmp/packetbeat"
+
+    # Name of the generated files. The default is `packetbeat` and it generates files: `packetbeat`, `packetbeat.1`, `packetbeat.2`, etc.
+    #filename: packetbeat
+
+    # Maximum size in kilobytes of each file. When this size is reached, the files are
+    # rotated. The default value is 10 MB.
+    #rotate_every_kb: 10000
+
+    # Maximum number of files under path. When this number of files is reached, the
+    # oldest file is deleted and the rest are shifted from last to first. The default
+    # is 7 files.
+    #number_of_files: 7
+
+
+  ### Console output
+  # console:
+    # Pretty print json event
+    #pretty: false
+
+
 ############################# Shipper #########################################
 
 shipper:
   # The name of the shipper that publishes the network data. It can be used to group
   # all the transactions sent by a single shipper in the web interface.
   # If this options is not defined, the hostname is used.
-  #name: {SHIPPER_NAME}
+  name: {{SHIPPER_NAME}}
 
   # The tags of the shipper are included in their own field with each
   # transaction published. Tags make it easy to group servers by different
   # logical properties.
-  #tags: [{SHIPPER_TAGS}]
+  tags: [{{SHIPPER_TAGS}}]
 
   # Uncomment the following if you want to ignore transactions created
   # by the server on which the shipper is installed. This option is useful

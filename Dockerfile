@@ -1,22 +1,26 @@
 # AUTHOR:         João Ribeiro <jonnybgod@gmail.com>
 # DESCRIPTION:    jonnybgod/topbeat
 
-FROM phusion/baseimage:latest
+FROM frolvlad/alpine-glibc:alpine-3.3_glibc-2.23
 MAINTAINER João Ribeiro <jonnybgod@gmail.com>
+
+# Here we use several hacks collected from https://github.com/gliderlabs/docker-alpine/issues/11:
+# # 1. install GLibc (which is not the cleanest solution at all) 
 
 ENV VERSION=1.1.2 PLATFORM=x86_64
 ENV FILENAME=topbeat-${VERSION}-${PLATFORM}.tar.gz 
 
-RUN apt-get update \
- && apt-get install -y --no-install-recommends libpcap0.8 \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Environment variables
+ENV TOPBEAT_HOME /opt/topbeat-${VERSION}-${PLATFORM}
+ENV PATH $PATH:${TOPBEAT_HOME}
 
-RUN curl -L -O https://download.elastic.co/beats/topbeat/${FILENAME} \
- && tar xzvf ${FILENAME}
+WORKDIR /opt/
 
-ADD topbeat.yml /etc/topbeat/topbeat.yml
+RUN wget -q -O - http://download.elastic.co/beats/topbeat/${FILENAME} | tar xz -C .
 
-WORKDIR topbeat-${VERSION}-${PLATFORM}
+ADD topbeat.yml ${TOPBEAT_HOME}/
+ADD docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-CMD ["./topbeat", "-e", "-c=/etc/topbeat/topbeat.yml"]
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["start"]
