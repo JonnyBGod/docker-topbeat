@@ -36,6 +36,7 @@ Optional variables:
 * `PERIOD`: to specify how often to read server statistics (default: 10)
 * `PROCS`: to specify regular expression to match the processes that are monitored (default: .*)
 * `INDEX`: to specify the elasticsearch index (default: topbeat)
+* `LOG_LEVEL`: to specify the log level (default: error) 
 * `SHIPPER_NAME`: to specify the Topbeat shipper name (default: the container ID)
 * `SHIPPER_TAGS`: to specify the Topbeat shipper tags
 
