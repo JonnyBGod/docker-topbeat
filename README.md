@@ -1,9 +1,6 @@
-jonnybgod/topbeat
-=================
-
 [![](https://badge.imagelayers.io/jonnybgod/topbeat:latest.svg)](https://imagelayers.io/?images=jonnybgod/topbeat:latest)
 
-# What is Filebeat?
+# What is Topbeat?
 Topbeat is the Beat used for server monitoring. It is a lightweight agent that installed on your servers, reads periodically system wide and per process CPU and memory statistics and indexes them in Elasticsearch.
 
 ![alt text](https://static-www.elastic.co/assets/blta28996a125bb8b42/packetbeat-fish-nodes-bkgd.png?q=755 "Packetbeat logo")
