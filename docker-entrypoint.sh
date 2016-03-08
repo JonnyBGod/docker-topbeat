@@ -23,12 +23,12 @@ if [ "$1" = 'start' ]; then
     exit 1
   fi
 
-  sed -i "s#{{CPU_PER_CORE}}#${CPU_PER_CORE:-false}#g" ${TOPBEAT_HOME}/topbeat.yml
-  sed -i "s#{{PERIOD}}#${PERIOD:-10}#g" ${TOPBEAT_HOME}/topbeat.yml
-  sed -i "s#{{PROCS}}#${PROCS:-.*}#g" ${TOPBEAT_HOME}/topbeat.yml
-  sed -i "s#{{INDEX}}#${INDEX:-topbeat}#g" ${TOPBEAT_HOME}/topbeat.yml
-  sed -i "s#{{LOG_LEVEL}}#${LOG_LEVEL:-error}#g" ${TOPBEAT_HOME}/topbeat.yml
-  sed -i "s#{{SHIPPER_NAME}}#${SHIPPER_NAME:-`hostname`}#g" ${TOPBEAT_HOME}/topbeat.yml
+  sed -i "s#{{CPU_PER_CORE}}#${CPU_PER_CORE:=false}#g" ${TOPBEAT_HOME}/topbeat.yml
+  sed -i "s#{{PERIOD}}#${PERIOD:=10}#g" ${TOPBEAT_HOME}/topbeat.yml
+  sed -i "s#{{PROCS}}#${PROCS:=.*}#g" ${TOPBEAT_HOME}/topbeat.yml
+  sed -i "s#{{INDEX}}#${INDEX:=topbeat}#g" ${TOPBEAT_HOME}/topbeat.yml
+  sed -i "s#{{LOG_LEVEL}}#${LOG_LEVEL:=error}#g" ${TOPBEAT_HOME}/topbeat.yml
+  sed -i "s#{{SHIPPER_NAME}}#${SHIPPER_NAME:=`hostname`}#g" ${TOPBEAT_HOME}/topbeat.yml
   sed -i "s#{{SHIPPER_TAGS}}#${SHIPPER_TAGS}#g" ${TOPBEAT_HOME}/topbeat.yml
 
   echo "Initializing Topbeat..."
